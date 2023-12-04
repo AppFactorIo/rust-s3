@@ -81,7 +81,9 @@ impl<'a> PostPolicy<'a> {
     pub async fn sign(&self, bucket: Bucket) -> Result<PresignedPost, S3Error> {
         use hmac::Mac;
 
+        #[cfg(feature = "http-credentials")]
         bucket.credentials_refresh().await?;
+
         let now = now_utc();
 
         let policy = self.build(&now, &bucket).await?;

@@ -79,6 +79,7 @@ tokio = { version = "1", features = [
     "io-util",
 ], optional = true, default-features = false }
 tokio-native-tls = { version = "0.3", optional = true }
+tokio-rustls = { version = "0.24.1", optional = true }
 native-tls = { version = "0.2", optional = true }
 tokio-stream = { version = "0.1", optional = true }
 url = "2"
@@ -88,24 +89,26 @@ block_on_proc = { version = "0.2", optional = true }
 
 [features]
 default = ["tags", "use-tokio-native-tls", "fail-on-err"]
-use-tokio-native-tls = ["with-tokio", "aws-creds/native-tls"]
+use-tokio-native-tls = ["with-tokio",
+    "aws-creds/native-tls",
+    "tokio-native-tls",
+    "native-tls",
+]
 with-tokio = [
     "hyper",
     "hyper-tls",
     "tokio",
     "tokio/fs",
     "tokio-stream",
-    "tokio-native-tls",
-    "native-tls",
     "futures",
 ]
-async-std-native-tls = ["with-async-std", "aws-creds/native-tls"]
+async-std-native-tls = ["with-async-std", "http-credentials", "aws-creds/native-tls"]
 http-credentials = ["aws-creds/http-credentials"]
 with-async-std = ["async-std", "surf", "futures-io", "futures-util", "futures"]
 sync = ["attohttpc", "maybe-async/is_sync"]
 no-verify-ssl = []
 fail-on-err = []
-tokio-rustls-tls = ["with-tokio", "aws-creds/rustls-tls"]
+tokio-rustls-tls = ["with-tokio", "tokio-rustls", "aws-creds/rustls-tls"]
 sync-native-tls = ["sync", "aws-creds/native-tls", "attohttpc/tls"]
 sync-native-tls-vendored = [
     "sync",

@@ -110,11 +110,14 @@ pub struct Bucket {
 }
 
 impl Bucket {
+
+    #[cfg(feature = "http-credentials")]
     #[maybe_async::async_impl]
     pub async fn credentials_refresh(&self) -> Result<(), S3Error> {
         Ok(self.credentials.write().await.refresh()?)
     }
 
+    #[cfg(feature = "http-credentials")]
     #[maybe_async::sync_impl]
     pub fn credentials_refresh(&self) -> Result<(), S3Error> {
         match self.credentials.write() {

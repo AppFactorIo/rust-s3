@@ -195,6 +195,7 @@ impl<'a> HyperRequest<'a> {
         path: &'a str,
         command: Command<'a>,
     ) -> Result<HyperRequest<'a>, S3Error> {
+        #[cfg(feature = "http-credentials")]
         bucket.credentials_refresh().await?;
         Ok(Self {
             bucket,
