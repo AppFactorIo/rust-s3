@@ -94,10 +94,10 @@ use-tokio-native-tls = ["with-tokio",
     "aws-creds/native-tls",
     "tokio-native-tls",
     "native-tls",
+    "hyper-tls"
 ]
 with-tokio = [
     "hyper",
-    "hyper-tls",
     "tokio",
     "tokio/fs",
     "tokio-stream",
