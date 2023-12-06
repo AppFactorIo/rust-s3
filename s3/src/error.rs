@@ -27,7 +27,7 @@ pub enum S3Error {
     #[cfg(feature = "with-tokio")]
     #[error("hyper: {0}")]
     Hyper(#[from] hyper::Error),
-    #[cfg(feature = "with-tokio")]
+    #[cfg(feature = "native-tls")]
     #[error("native-tls: {0}")]
     NativeTls(#[from] native_tls::Error),
     #[error("header to string: {0}")]

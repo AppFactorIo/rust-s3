@@ -105,12 +105,13 @@ pub struct Bucket {
     pub request_timeout: Option<Duration>,
     path_style: bool,
     listobjects_v2: bool,
-    #[cfg(feature = "with-tokio")]
+    #[cfg(all(not(feature = "tokio-rustls-tls"), feature = "with-tokio"))]
     http_client: Arc<hyper::Client<hyper_tls::HttpsConnector<hyper::client::HttpConnector>>>,
+    #[cfg(all(feature = "tokio-rustls-tls", feature = "with-tokio"))]
+    http_client: Arc<hyper::Client<hyper_rustls::HttpsConnector<hyper::client::HttpConnector>>>,
 }
 
 impl Bucket {
-
     #[cfg(feature = "http-credentials")]
     #[maybe_async::async_impl]
     pub async fn credentials_refresh(&self) -> Result<(), S3Error> {
@@ -126,10 +127,17 @@ impl Bucket {
         }
     }
 
-    #[cfg(feature = "with-tokio")]
+    #[cfg(all(feature = "with-tokio", not(feature = "tokio-rustls-tls")))]
     pub fn http_client(
         &self,
     ) -> Arc<hyper::Client<hyper_tls::HttpsConnector<hyper::client::HttpConnector>>> {
+        Arc::clone(&self.http_client)
+    }
+
+    #[cfg(all(feature = "with-tokio", feature = "tokio-rustls-tls"))]
+    pub fn http_client(
+        &self,
+    ) -> Arc<hyper::Client<hyper_rustls::HttpsConnector<hyper::client::HttpConnector>>> {
         Arc::clone(&self.http_client)
     }
 }
